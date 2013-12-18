@@ -51,7 +51,7 @@ public class MyGLSurfaceRender implements Renderer {
 	private boolean rimPassed;
 	private boolean floorCollide;
 	
-	private final float GRAVITY = -0.08f;
+	public static final float GRAVITY = -0.08f;
 	
 	@Override
 	public void onDrawFrame(GL10 arg0) {
@@ -386,6 +386,12 @@ public class MyGLSurfaceRender implements Renderer {
 	
 	public void setGameMode(boolean mode) {
 		gameModeFlag = mode;		
+	}
+
+	public void setBallVelocity(float x, float y, float z) {
+		m_xVelo = x;
+		m_yVelo = y;
+		m_zVelo = z;		
 	}
 
 	
