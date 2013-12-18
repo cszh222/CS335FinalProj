@@ -37,6 +37,13 @@ public class MyGLSurfaceRender implements Renderer {
 	private float m_yVelo;
 	private float m_zVelo;
 	
+	private float replay_xPos;
+	private float replay_yPos;
+	private float replay_zPos;
+	private float replay_xVelo;
+	private float replay_yVelo;
+	private float replay_zVelo;	
+	
 	private float m_eyeX;
 	private float m_eyeY;
 	
@@ -380,8 +387,7 @@ public class MyGLSurfaceRender implements Renderer {
 			lose = true;
 		
 		if(floorCollide)
-			lose = true;
-		
+			lose = true;		
 		return lose;
 	}
 	
@@ -395,7 +401,49 @@ public class MyGLSurfaceRender implements Renderer {
 		m_zVelo = z;		
 	}
 
+	public void setReplayParams() {
+		replay_xPos = m_ballPosX;
+		replay_yPos = m_ballPosY;
+		replay_zPos = m_ballPosZ;
+		
+		replay_xVelo = m_xVelo;
+		replay_yVelo = m_yVelo;
+		replay_zVelo = m_zVelo;
+	}
 	
+	public void loadReplayParams(){
+		m_ballPosX = replay_xPos;
+		m_ballPosY = replay_yPos;
+		m_ballPosZ = replay_zPos;
+		
+		m_xVelo = replay_xVelo;
+		m_yVelo = replay_yVelo;
+		m_zVelo = replay_zVelo;
+	}
+	
+	public void resetGame(){		
+		m_Zoom = -1.0f;
+		m_eyeAngleX = 0.0f;
+		m_eyeAngleY = (float) Math.toRadians(20.0);
+		m_shootAngleX = 0.0f;
+		m_shootAngleY = (float) Math.toRadians(45.0);
+		m_camPos = 0.0f;
+		m_ballPosX = 0.0f;
+		m_ballPosY = 0.0f;
+		m_ballPosZ = 1.0f;
+		
+		m_xVelo = 0;
+		m_yVelo = 0;
+		m_zVelo = 0;
+		
+		m_eyeX = (float) (Math.tan(m_eyeAngleX)*m_Zoom);
+		m_eyeY = (float) (Math.tan(m_eyeAngleY)*m_Zoom);
+		
+		gameModeFlag = true;
+		animateModeFlag = false;
+		rimPassed = false;
+		floorCollide = false;		
+	}	
 	
 }
 

@@ -142,6 +142,7 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	public void shootBall(float velocity) {
 		if(!m_glRenderer.isAnimating()){
 			m_glRenderer.setVelocity(velocity);
+			m_glRenderer.setReplayParams();
 			startAnimating();
 		}		
 	}
@@ -255,4 +256,5 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 		   else
 			   Toast.makeText(m_ctx, "You Lose", Toast.LENGTH_SHORT).show();
 	   }
+	   
 }
