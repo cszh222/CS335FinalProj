@@ -330,7 +330,7 @@ public class MyGLSurfaceRender implements Renderer {
 	}
 	
 	public void detectFloorCollision(){
-		if(m_ballPosY-0.5f<=0.0f && m_yVelo <= 0){
+		if(m_ballPosY-0.5f<=-3.0f && m_yVelo <= 0){
 			m_ballPosY = 0.0f;
 			m_yVelo = -m_yVelo;
 			floorCollide = true;
@@ -344,6 +344,7 @@ public class MyGLSurfaceRender implements Renderer {
 		for(int i=0; i<32; i+=2){
 			points[i] = (float)Math.cos(curAngle);
 			points[i+1] = (float)Math.sin(curAngle)+14f;
+			curAngle+=angle;
 		}
 		boolean collide = false;
 		if(m_ballPosY-0.5f<=4.0f && m_ballPosY+0.5f>=4.0f)
