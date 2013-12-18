@@ -24,6 +24,7 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	
 	private Timer playTimer;
 	private CustomHandler playHandler = new CustomHandler();
+	private EndHandler endHandler = new EndHandler();
 	
 	public final static int REFRESH_RATE = 30;
 	
@@ -169,6 +170,16 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 		playTimer.scheduleAtFixedRate(customTimerTask, REFRESH_RATE, REFRESH_RATE);
 	}
 	
+	public void startEndTimer() {
+		if(playTimer != null) {
+			playTimer.cancel();
+			playTimer = null;
+		}
+		playTimer = new Timer();
+		EndTimerTask endTimerTask = new EndTimerTask();
+		playTimer.scheduleAtFixedRate(endTimerTask, REFRESH_RATE, REFRESH_RATE);
+	}
+	
 	public void cancelTimer() {
 		if (playTimer != null) {
 			playTimer.cancel();
@@ -182,6 +193,14 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	        @Override
 	        public void run() {
 	            playHandler.sendEmptyMessage(0);
+	        }
+	    };
+	    
+	    class EndTimerTask extends TimerTask {
+			 
+	        @Override
+	        public void run() {
+	            endHandler.sendEmptyMessage(0);
 	        }
 	    };
 
@@ -201,15 +220,31 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	            }
 	            else if(m_glRenderer.checkWin()){
 	            	cancelTimer();
-	            	m_glRenderer.setGameMode(false);
-	            	displayEndGame(true);	 
-	            }
+	            	startEndTimer();
+	            }	            	
 	            else if(m_glRenderer.checkLose()){
 	            	cancelTimer();
 	            	m_glRenderer.setGameMode(false);
 	            	displayEndGame(false);	 
 	            }            
 	            
+	            requestRender();   
+	        }
+	   };
+	   
+	   class EndHandler extends Handler {
+		   int counter = 0;
+	        @Override
+	        public void handleMessage(Message msg) {
+	            super.handleMessage(msg);
+	            //System.out.println("ABDEBUG: timerHandler - entering");
+	            if(counter >= 16) {
+	            	cancelTimer();
+	            	m_glRenderer.setGameMode(false);
+	            	displayEndGame(true);
+	            }	            
+	            m_glRenderer.setBallVelocity(0, MyGLSurfaceRender.GRAVITY, 0);
+	            m_glRenderer.moveBall(REFRESH_RATE);           
 	            requestRender();   
 	        }
 	   };
