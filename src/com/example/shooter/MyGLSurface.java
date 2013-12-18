@@ -1,6 +1,7 @@
 package com.example.shooter;
 
 import java.util.Timer;
+import java.util.TimerTask;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
@@ -11,22 +12,27 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.OnScaleGestureListener;
+import android.widget.Toast;
 
 public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener {
 	private MyGLSurfaceRender m_glRenderer;
 	
+	private Context m_ctx;
 	private final float TOUCH_SCALE_FACTOR = 180.0F / 320;
 	private float m_PreviousX;
 	private float m_PreviousY;
 	
 	private Timer playTimer;
-	private CustomPlayHandler playHandler;
+	private CustomHandler playHandler = new CustomHandler();
+	
+	public final static int REFRESH_RATE = 30;
 	
 	private ScaleGestureDetector sgd;
 	private boolean isScaling;
 	
 	public MyGLSurface(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		m_ctx = context;
 		sgd = new ScaleGestureDetector(context, this);
 		// Create and OpenGL ES 2.0 context
 		setEGLContextClientVersion(2);
@@ -142,17 +148,62 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 
 	private void startAnimating() {
 		m_glRenderer.setAnimateFlag(true);
+		startTimer();
 		//set initial time
 		//have timer task move the ball	
 		//have timer check game over 
-	}	
+	}		
 	
-	class CustomPlayHandler extends Handler{
-		
-		@Override
-		public void handleMessage(Message msg){
-			super.handleMessage(msg);
-			
+	private void stopAnimating() {
+		//TODO
+		cancelTimer();
+	}
+	
+	public void startTimer() {
+		if(playTimer != null) {
+			playTimer.cancel();
+			playTimer = null;
+		}
+		playTimer = new Timer();
+		CustomTimerTask customTimerTask = new CustomTimerTask();
+		playTimer.scheduleAtFixedRate(customTimerTask, REFRESH_RATE, REFRESH_RATE);
+	}
+	
+	public void cancelTimer() {
+		if (playTimer != null) {
+			playTimer.cancel();
+	        playTimer= null;
 		}
 	}
+	
+	//classes for timers
+		class CustomTimerTask extends TimerTask {
+			 
+	        @Override
+	        public void run() {
+	            playHandler.sendEmptyMessage(0);
+	        }
+	    };
+
+	    class CustomHandler extends Handler {
+	        @Override
+	        public void handleMessage(Message msg) {
+	            super.handleMessage(msg);
+	            System.out.println("ABDEBUG: timerHandler - entering");
+	            
+	            m_glRenderer.moveBall(REFRESH_RATE);
+	            m_glRenderer.detectBoardCollision();
+	            m_glRenderer.detectFloorCollision();
+	            requestRender();
+	            
+	            if(m_glRenderer.isGameMode()) {
+	            	cancelTimer();
+	            	displayEndGame();
+	            }
+	        }
+	   };
+	   
+	   public void displayEndGame() {
+		   Toast.makeText(m_ctx, "Game Over", Toast.LENGTH_SHORT).show();
+	   }
 }
