@@ -205,7 +205,7 @@ public class MyGLSurfaceRender implements Renderer {
 		m_eyeAngleX = 0.0f;
 		m_eyeAngleY = (float) Math.toRadians(20.0);
 		m_shootAngleX = 0.0f;
-		m_shootAngleY = (float) Math.toRadians(20.0);
+		m_shootAngleY = (float) Math.toRadians(45.0);
 		m_camPos = 0.0f;
 		m_ballPosX = 0.0f;
 		m_ballPosY = 0.0f;
@@ -218,7 +218,7 @@ public class MyGLSurfaceRender implements Renderer {
 		m_eyeX = (float) (Math.tan(m_eyeAngleX)*m_Zoom);
 		m_eyeY = (float) (Math.tan(m_eyeAngleY)*m_Zoom);
 		
-		gameModeFlag = false;
+		gameModeFlag = true;
 		animateModeFlag = false;
 	}
 
@@ -257,7 +257,7 @@ public class MyGLSurfaceRender implements Renderer {
 	public void setShootAngleY(float angle) {
 		m_shootAngleY+=angle;
 		if(m_shootAngleY>=(float)Math.PI/2)
-			m_shootAngleY = (float) (Math.PI/2);
+			m_shootAngleY = (float)(Math.PI/2);
 		if(m_shootAngleY<=0.0f)
 			m_shootAngleY =0.0f;		
 	}
@@ -292,9 +292,10 @@ public class MyGLSurfaceRender implements Renderer {
 	}
 
 	public void setVelocity(float velocity) {
-		m_xVelo = (float) (velocity*Math.cos(m_shootAngleX)*Math.cos(m_shootAngleY));
+		m_xVelo = (float) (velocity*Math.sin(m_shootAngleX)*Math.cos(m_shootAngleY));
 		m_yVelo = (float) (velocity*Math.sin(m_shootAngleY));
-		m_zVelo = (float) (velocity*Math.sin(m_shootAngleX)*Math.cos(m_shootAngleY));
+		m_zVelo = (float) (velocity*Math.cos(m_shootAngleX)*Math.cos(m_shootAngleY));
+		
 	}
 
 	public void setAnimateFlag(boolean flag) {
@@ -302,9 +303,10 @@ public class MyGLSurfaceRender implements Renderer {
 	}
 	
 	public void moveBall(int frameRate){
-		m_ballPosX = m_ballPosX + m_xVelo*frameRate;
-		m_ballPosX = m_ballPosX + m_yVelo*frameRate+0.5f*frameRate*frameRate;
-		m_ballPosZ = m_ballPosZ + m_zVelo*frameRate;
+		float moverate = frameRate/100f;
+		m_ballPosX = m_ballPosX + m_xVelo*moverate;
+		m_ballPosX = m_ballPosX + m_yVelo*moverate+0.5f*moverate*moverate;
+		m_ballPosZ = m_ballPosZ + m_zVelo*moverate;
 	}
 	
 	public void detectBoardCollision(){

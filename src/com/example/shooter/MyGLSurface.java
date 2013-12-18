@@ -196,11 +196,11 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	            m_glRenderer.detectFloorCollision();
 	            requestRender();
 	            
-	            if(m_glRenderer.isGameMode()) {
+	            if(!m_glRenderer.isGameMode()) {
 	            	cancelTimer();
 	            	displayEndGame();
 	            }
-	        }
+	        }//
 	   };
 	   
 	   public void displayEndGame() {
