@@ -6,6 +6,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.Matrix;
+import android.util.Log;
 
 
 public class MyGLSurfaceRender implements Renderer {
@@ -32,6 +33,10 @@ public class MyGLSurfaceRender implements Renderer {
 	private float m_ballPosY;
 	private float m_ballPosZ;
 	
+	private float m_xVelo;
+	private float m_yVelo;
+	private float m_zVelo;
+	
 	private float m_eyeX;
 	private float m_eyeY;
 	
@@ -42,6 +47,7 @@ public class MyGLSurfaceRender implements Renderer {
 	private Circle m_rim;
 	
 	private boolean gameModeFlag;
+	private boolean animateModeFlag;
 	
 	@Override
 	public void onDrawFrame(GL10 arg0) {
@@ -195,18 +201,23 @@ public class MyGLSurfaceRender implements Renderer {
 		
 		m_Zoom = -1.0f;
 		m_eyeAngleX = 0.0f;
-		m_eyeAngleY = 0.0f;
+		m_eyeAngleY = (float) Math.toRadians(20.0);
 		m_shootAngleX = 0.0f;
-		m_shootAngleY = 0.0f;
+		m_shootAngleY = (float) Math.toRadians(20.0);
 		m_camPos = 0.0f;
 		m_ballPosX = 0.0f;
 		m_ballPosY = 0.0f;
 		m_ballPosZ = 1.0f;
 		
+		m_xVelo = 0;
+		m_yVelo = 0;
+		m_zVelo = 0;
+		
 		m_eyeX = (float) (Math.tan(m_eyeAngleX)*m_Zoom);
 		m_eyeY = (float) (Math.tan(m_eyeAngleY)*m_Zoom);
 		
 		gameModeFlag = false;
+		animateModeFlag = false;
 	}
 
 	public static int loadShader(int type, String shaderCode) {
@@ -224,17 +235,17 @@ public class MyGLSurfaceRender implements Renderer {
 
 	public void setEyeAngleX(float angle) {
 		m_eyeAngleX+=angle;
-		if(m_eyeAngleX>=(float)Math.PI/2)
-			m_eyeAngleX = (float) (Math.PI/2);
-		if(m_eyeAngleX<=(float)-Math.PI/2)
-			m_eyeAngleY =(float)-Math.PI/2;		
+		if(m_eyeAngleX>=(float)Math.PI)
+			m_eyeAngleX = (float) (Math.PI);
+		if(m_eyeAngleX<=(float)-Math.PI)
+			m_eyeAngleX=(float)-Math.PI;		
 		m_eyeX = (float) (Math.tan(m_eyeAngleX)*m_Zoom);		
 	}	
 	
 	public void setEyeAngleY(float angle) {
 		m_eyeAngleY+=angle;
 		if(m_eyeAngleY>=(float)Math.PI/2)
-			m_eyeAngleY = (float) (Math.PI/2);
+			m_eyeAngleY = (float)(Math.PI/2);
 		if(m_eyeAngleY<=0.0f)
 			m_eyeAngleY =0.0f;
 		
@@ -251,10 +262,10 @@ public class MyGLSurfaceRender implements Renderer {
 	
 	public void setShootAngleX(float angle) {
 		m_shootAngleX+=angle;
-		if(m_shootAngleX>=(float)Math.PI/2)
-			m_shootAngleX = (float) (Math.PI/2);
-		if(m_shootAngleX<=0.0f)
-			m_shootAngleX =0.0f;		
+		if(m_shootAngleX>=(float)Math.PI)
+			m_shootAngleX = (float)Math.PI;
+		if(m_shootAngleX<=(float)-Math.PI)
+			m_shootAngleX =(float)-Math.PI;		
 	}
 
 	public float getZoom() {
@@ -264,6 +275,10 @@ public class MyGLSurfaceRender implements Renderer {
 	public boolean isGameMode() {
 		return gameModeFlag;
 	}
+	
+	public boolean isAnimating(){
+		return animateModeFlag;
+	}
 
 	public void setCamPosZ(float pos) {
 		m_camPosZ+=pos;
@@ -272,6 +287,16 @@ public class MyGLSurfaceRender implements Renderer {
 			m_camPosZ = -10.0f;
 		else if (m_camPosZ >= 5.0f)//prevent zooming to close
 			m_camPosZ = 5.0f;		
+	}
+
+	public void setVelocity(float velocity) {
+		m_xVelo = (float) (velocity*Math.cos(m_shootAngleX)*Math.cos(m_shootAngleY));
+		m_yVelo = (float) (velocity*Math.sin(m_shootAngleY));
+		m_zVelo = (float) (velocity*Math.sin(m_shootAngleX)*Math.cos(m_shootAngleY));
+	}
+
+	public void setAnimateFlag(boolean flag) {
+		animateModeFlag = flag;		
 	}	
 	
 }

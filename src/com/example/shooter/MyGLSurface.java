@@ -15,6 +15,9 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	private float m_PreviousX;
 	private float m_PreviousY;
 	
+	private Timer playTimer;
+	private CustomPlayHandler playHandler;
+	
 	private ScaleGestureDetector sgd;
 	private boolean isScaling;
 	
@@ -34,20 +37,26 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	
 	
 	public void move(float moveCoord){
-		m_glRenderer.changePos(moveCoord);
-		requestRender();
+		if(m_glRenderer.isGameMode() && !m_glRenderer.isAnimating()){
+			m_glRenderer.changePos(moveCoord);
+			requestRender();
+		}
 	}
 
-
 	public void rotateX(float angle) {
-		m_glRenderer.setEyeAngleX(angle);
-		requestRender();
-		
+		if(m_glRenderer.isGameMode() && !m_glRenderer.isAnimating()){
+			m_glRenderer.setEyeAngleX(angle);
+			m_glRenderer.setShootAngleX(angle);
+			requestRender();
+		}		
 	}
 	
 	public void rotateY(float angle){
-		m_glRenderer.setEyeAngleY(angle);
-		requestRender();
+		if(m_glRenderer.isGameMode() && !m_glRenderer.isAnimating()){
+			m_glRenderer.setEyeAngleY(angle);
+			m_glRenderer.setShootAngleY(angle);
+			requestRender();
+		}
 	}
 
 
@@ -99,9 +108,9 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 		float scaleFactor = detector.getScaleFactor();
 		Log.i("GLEX Error: ", Float.toString(scaleFactor));
 		if(scaleFactor>1.0f)//scaling out
-			m_glRenderer.setCamPosZ(0.2f);
-		else if (scaleFactor < 1.0f)//scaling in
 			m_glRenderer.setCamPosZ(-0.2f);
+		else if (scaleFactor < 1.0f)//scaling in
+			m_glRenderer.setCamPosZ(0.2f);
 		requestRender();
 		return true;
 	}
@@ -118,6 +127,19 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 		isScaling = false;//reset scaling flag		
 	}
 
-	
-	
+
+	public void shootBall(float velocity) {
+		if(!m_glRenderer.isAnimating()){
+			m_glRenderer.setVelocity(velocity);
+			startAnimating();
+		}		
+	}
+
+
+	private void startAnimating() {
+		m_glRenderer.setAnimateFlag(true);
+		//set initial time
+		//have timer task move the ball	
+		//have timer check game over 
+	}		
 }

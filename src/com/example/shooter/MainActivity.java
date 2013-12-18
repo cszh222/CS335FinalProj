@@ -1,12 +1,18 @@
 package com.example.shooter;
 
 import android.app.Activity;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SensorEventListener {
 	MyGLSurface m_glSurface;
 	Button m_moveLeft;
 	Button m_moveRight;
@@ -14,6 +20,13 @@ public class MainActivity extends Activity {
 	Button m_lookRight;
 	Button m_lookUp;
 	Button m_lookDown;
+	
+	private SensorManager m_sensorManager;
+	private Sensor m_accelerometer;
+	
+	private float m_previousZ;
+	private float m_timestamp;
+	private final float VELOCITY_SCALE = (float) 1.0E7;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,6 +49,12 @@ public class MainActivity extends Activity {
 		m_lookRight.setOnClickListener(look);
 		m_lookUp.setOnClickListener(look);
 		m_lookDown.setOnClickListener(look);
+		
+		m_sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		m_accelerometer = m_sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		
+		m_previousZ = 0.0f;
+		m_timestamp = 0.0f;
 	}
 
 	@Override
@@ -43,6 +62,18 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	@Override
+	protected void onResume(){
+		super.onResume();
+		m_sensorManager.registerListener(this, m_accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+	}
+	
+	@Override
+	protected void onPause(){
+		super.onPause();
+		m_sensorManager.unregisterListener(this);
 	}
 	
 	View.OnClickListener move = new View.OnClickListener() {		
@@ -74,5 +105,25 @@ public class MainActivity extends Activity {
 		}
 		
 	};
+	
+	@Override
+	public void onSensorChanged(SensorEvent event) {
+		float curZ = event.values[2];
+		float curTime = event.timestamp;
+		//only get velocity if the difference of angular axis is large enough
+		if(m_timestamp != 0.0f && Math.abs(curZ-m_previousZ)>=2.0f){			
+			float velocity = VELOCITY_SCALE*(curZ-m_previousZ)/(curTime-m_timestamp);			
+			if(velocity>0.0f)
+				m_glSurface.shootBall(velocity);
+		}
+		m_timestamp = curTime;
+		m_previousZ = curZ;
+	}
+	
+	@Override
+	public void onAccuracyChanged(Sensor arg0, int arg1) {
+		
+	}
+
 
 }
