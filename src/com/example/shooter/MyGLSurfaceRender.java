@@ -383,7 +383,7 @@ public class MyGLSurfaceRender implements Renderer {
 	public boolean checkLose(){
 		boolean lose = false;
 		
-		if(m_ballPosZ>=15.0f || m_ballPosZ<0f)
+		if(m_ballPosZ>=20.0f || m_ballPosZ<0f)
 			lose = true;
 		
 		if(floorCollide)
