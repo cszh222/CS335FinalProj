@@ -82,10 +82,17 @@
         android:layout_gravity="center"
         android:orientation="horizontal"> 
         <Button
-        android:id="@+id/randomBut"
+        android:id="@+id/resetBut"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />        
+        android:layout_height="wrap_content"
+        android:text="Reset" />
+        <Button
+        android:id="@+id/replayBut"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Replay" />       
    </LinearLayout> 
         
         

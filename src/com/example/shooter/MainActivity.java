@@ -21,6 +21,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 	Button m_lookUp;
 	Button m_lookDown;
 	
+	Button m_reset;
+	Button m_replay;
+	
 	private SensorManager m_sensorManager;
 	private Sensor m_accelerometer;
 	
@@ -45,10 +48,15 @@ public class MainActivity extends Activity implements SensorEventListener {
 		m_lookRight = (Button)findViewById(R.id.lookRight);
 		m_lookUp = (Button)findViewById(R.id.lookUp);
 		m_lookDown = (Button)findViewById(R.id.lookDown);
+		m_reset = (Button)findViewById(R.id.resetBut);
+		m_replay = (Button)findViewById(R.id.replayBut);
+		
 		m_lookLeft.setOnClickListener(look);
 		m_lookRight.setOnClickListener(look);
 		m_lookUp.setOnClickListener(look);
 		m_lookDown.setOnClickListener(look);
+		m_reset.setOnClickListener(reset);
+		m_replay.setOnClickListener(replay);
 		
 		m_sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		m_accelerometer = m_sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -75,6 +83,20 @@ public class MainActivity extends Activity implements SensorEventListener {
 		super.onPause();
 		m_sensorManager.unregisterListener(this);
 	}
+	
+	View.OnClickListener reset = new View.OnClickListener() {		
+		@Override
+		public void onClick(View v) {
+			m_glSurface.resetGame();		
+		}
+	};
+	
+	View.OnClickListener replay = new View.OnClickListener() {		
+		@Override
+		public void onClick(View v) {
+			m_glSurface.startReplay();		
+		}
+	};
 	
 	View.OnClickListener move = new View.OnClickListener() {		
 		@Override
