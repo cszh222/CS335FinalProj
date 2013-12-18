@@ -27,6 +27,7 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	private EndHandler endHandler = new EndHandler();
 	
 	public final static int REFRESH_RATE = 30;
+	public static int replay_rate = 30;
 	
 	private ScaleGestureDetector sgd;
 	private boolean isScaling;
@@ -180,6 +181,16 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 		playTimer.scheduleAtFixedRate(endTimerTask, REFRESH_RATE, REFRESH_RATE);
 	}
 	
+	private void startReplayTimer() {
+		if(playTimer != null) {
+			playTimer.cancel();
+			playTimer = null;
+		}
+		playTimer = new Timer();
+		CustomTimerTask customTimerTask = new CustomTimerTask();
+		playTimer.scheduleAtFixedRate(customTimerTask, replay_rate, replay_rate);		
+	}
+	
 	public void cancelTimer() {
 		if (playTimer != null) {
 			playTimer.cancel();
@@ -245,7 +256,8 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	            }	            
 	            m_glRenderer.setBallVelocity(0, MyGLSurfaceRender.GRAVITY, 0);
 	            m_glRenderer.moveBall(REFRESH_RATE);           
-	            requestRender();   
+	            requestRender();
+	            counter++;
 	        }
 	   };
 	   
@@ -255,4 +267,51 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 		   else
 			   Toast.makeText(m_ctx, "You Lose", Toast.LENGTH_SHORT).show();
 	   }
+
+
+	public void resetGame() {
+		m_glRenderer.resetGame();		
+	}
+
+
+	public void startReplay() {
+		if(m_glRenderer.isGameMode())
+			return;
+		m_glRenderer.loadReplayParams();
+		startReplayTimer();		
+	}
+	
+	public void changeReplaySpeed(boolean isUp) {
+		if(isUp) {
+			switch(replay_rate) {
+				case 30:
+					replay_rate = 30;
+					break;
+				case 7:
+					replay_rate = 30;
+					break;
+				case 3:
+					replay_rate = 7;
+					break;
+				default:
+					Log.e("replaySwitch", "SHOULD NEVER HIT THIS!!!");
+			}
+		}
+		else {
+			switch(replay_rate) {
+			case 30:
+				replay_rate = 7;
+				break;
+			case 7:
+				replay_rate = 3;
+				break;
+			case 3:
+				replay_rate = 3;
+				break;
+			default:
+				Log.e("replaySwitch", "SHOULD NEVER HIT THIS!!!");
+		}
+		}
+		startReplayTimer();
+	}
 }
