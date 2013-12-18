@@ -48,8 +48,10 @@ public class MyGLSurfaceRender implements Renderer {
 	
 	private boolean gameModeFlag;
 	private boolean animateModeFlag;	
+	private boolean rimPassed;
+	private boolean floorCollide;
 	
-	private final float GRAVITY = -9.8f;
+	private final float GRAVITY = -0.08f;
 	
 	@Override
 	public void onDrawFrame(GL10 arg0) {
@@ -220,6 +222,8 @@ public class MyGLSurfaceRender implements Renderer {
 		
 		gameModeFlag = true;
 		animateModeFlag = false;
+		rimPassed = false;
+		floorCollide = false;
 	}
 
 	public static int loadShader(int type, String shaderCode) {
@@ -293,8 +297,10 @@ public class MyGLSurfaceRender implements Renderer {
 
 	public void setVelocity(float velocity) {
 		m_xVelo = (float) (velocity*Math.sin(m_shootAngleX)*Math.cos(m_shootAngleY));
-		m_yVelo = (float) (velocity*Math.sin(m_shootAngleY));
+		m_yVelo = (float) (velocity*Math.sin(m_shootAngleY));		
 		m_zVelo = (float) (velocity*Math.cos(m_shootAngleX)*Math.cos(m_shootAngleY));
+		
+		Log.i("YVELO", "x"+m_xVelo+"y"+m_yVelo+"z"+m_zVelo);
 		
 	}
 
@@ -305,26 +311,83 @@ public class MyGLSurfaceRender implements Renderer {
 	public void moveBall(int frameRate){
 		float moverate = frameRate/100f;
 		m_ballPosX = m_ballPosX + m_xVelo*moverate;
-		m_ballPosX = m_ballPosX + m_yVelo*moverate+0.5f*moverate*moverate;
+		m_ballPosY = m_ballPosY + m_yVelo*moverate;
 		m_ballPosZ = m_ballPosZ + m_zVelo*moverate;
+		m_yVelo = m_yVelo+GRAVITY*moverate;
+		//Log.i("moves", "yPos"+m_ballPosY+"zPos");
+		if(!rimPassed && m_ballPosY>4.0f)
+			rimPassed = true;
 	}
 	
 	public void detectBoardCollision(){
 		if(Math.abs(m_ballPosX) <= 3.5f && m_ballPosY<=6.5f && m_ballPosY>=3.5f){
 			//check collision with board
-			if(m_ballPosZ+0.5f >= 25.0f){
+			if(m_ballPosZ+0.5f >= 14.9f && m_ballPosZ+0.5f<=15.5f){
 				m_zVelo = -m_zVelo;
-				m_ballPosZ = 25.0f-0.5f;
+				m_ballPosZ = 14.9f-0.5f;
 			}				
 		}			
 	}
 	
 	public void detectFloorCollision(){
-		if(m_ballPosY-0.5f<=0.0f){
+		if(m_ballPosY-0.5f<=0.0f && m_yVelo <= 0){
 			m_ballPosY = 0.0f;
 			m_yVelo = -m_yVelo;
+			floorCollide = true;
 		}
 	}
+	
+	public boolean detectRimCollision(){
+		float[] points = new float[32];
+		float angle = (float)Math.toRadians(360f/16);
+		float curAngle = 0;
+		for(int i=0; i<32; i+=2){
+			points[i] = (float)Math.cos(curAngle);
+			points[i+1] = (float)Math.sin(curAngle)+14f;
+		}
+		boolean collide = false;
+		if(m_ballPosY-0.5f<=4.0f && m_ballPosY+0.5f>=4.0f)
+			for(int i=0; i<32; i+=2){
+				double xDiff = m_ballPosX-points[i];
+				double zDiff = m_ballPosZ-points[i+1];
+				double distance = Math.sqrt(Math.pow(xDiff, 2)+Math.pow(zDiff, 2));
+				if(distance <=0.5){
+					collide = true;
+					break;
+				}
+			}
+		return collide;
+	}
+	
+	public boolean checkWin(){
+		boolean win = false;
+		if(rimPassed)
+			if(m_ballPosY+0.5>=4.0f && m_ballPosY-0.5f<=4.0f){
+				double xDiff = m_ballPosX-0;
+				double zDiff = m_ballPosZ-14;
+				double distance = Math.sqrt(Math.pow(xDiff, 2)+Math.pow(zDiff, 2));
+				if(distance<=0.5f)
+					win = true;			
+			}		
+		return win;
+	}
+	
+	public boolean checkLose(){
+		boolean lose = false;
+		
+		if(m_ballPosZ>=15.0f || m_ballPosZ<0f)
+			lose = true;
+		
+		if(floorCollide)
+			lose = true;
+		
+		return lose;
+	}
+	
+	public void setGameMode(boolean mode) {
+		gameModeFlag = mode;		
+	}
+
 	
 	
 }

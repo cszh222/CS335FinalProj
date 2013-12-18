@@ -189,21 +189,35 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	        @Override
 	        public void handleMessage(Message msg) {
 	            super.handleMessage(msg);
-	            System.out.println("ABDEBUG: timerHandler - entering");
+	            //System.out.println("ABDEBUG: timerHandler - entering");
 	            
 	            m_glRenderer.moveBall(REFRESH_RATE);
 	            m_glRenderer.detectBoardCollision();
 	            m_glRenderer.detectFloorCollision();
-	            requestRender();
-	            
-	            if(!m_glRenderer.isGameMode()) {
+	            if(m_glRenderer.detectRimCollision()){
 	            	cancelTimer();
-	            	displayEndGame();
+	            	m_glRenderer.setGameMode(false);
+	            	displayEndGame(false);	            	
 	            }
-	        }//
+	            else if(m_glRenderer.checkWin()){
+	            	cancelTimer();
+	            	m_glRenderer.setGameMode(false);
+	            	displayEndGame(true);	 
+	            }
+	            else if(m_glRenderer.checkLose()){
+	            	cancelTimer();
+	            	m_glRenderer.setGameMode(false);
+	            	displayEndGame(false);	 
+	            }            
+	            
+	            requestRender();   
+	        }
 	   };
 	   
-	   public void displayEndGame() {
-		   Toast.makeText(m_ctx, "Game Over", Toast.LENGTH_SHORT).show();
+	   public void displayEndGame(boolean winGame) {
+		   if(winGame)
+			   Toast.makeText(m_ctx, "You Win", Toast.LENGTH_SHORT).show();
+		   else
+			   Toast.makeText(m_ctx, "You Lose", Toast.LENGTH_SHORT).show();
 	   }
 }

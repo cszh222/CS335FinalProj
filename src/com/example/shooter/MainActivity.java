@@ -26,7 +26,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 	
 	private float m_previousZ;
 	private float m_timestamp;
-	private final float VELOCITY_SCALE = (float) 1.0E7;
+	private final float VELOCITY_SCALE = (float) 1.5E7f;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
