@@ -47,7 +47,9 @@ public class MyGLSurfaceRender implements Renderer {
 	private Circle m_rim;
 	
 	private boolean gameModeFlag;
-	private boolean animateModeFlag;
+	private boolean animateModeFlag;	
+	
+	private final float GRAVITY = -9.8f;
 	
 	@Override
 	public void onDrawFrame(GL10 arg0) {
@@ -166,7 +168,7 @@ public class MyGLSurfaceRender implements Renderer {
 		float[] temp = new float[16];
 		
 		Matrix.setIdentityM(scale, 0);
-		Matrix.scaleM(scale, 0, 0.2f, 0.2f, 0.2f);
+		Matrix.scaleM(scale, 0, 0.5f, 0.5f, 0.5f);
 		
 		Matrix.setIdentityM(translate, 0);
 		Matrix.translateM(translate, 0, m_ballPosX, m_ballPosY, m_ballPosZ);
@@ -297,7 +299,31 @@ public class MyGLSurfaceRender implements Renderer {
 
 	public void setAnimateFlag(boolean flag) {
 		animateModeFlag = flag;		
-	}	
+	}
+	
+	public void moveBall(int frameRate){
+		m_ballPosX = m_ballPosX + m_xVelo*frameRate;
+		m_ballPosX = m_ballPosX + m_yVelo*frameRate+0.5f*frameRate*frameRate;
+		m_ballPosZ = m_ballPosZ + m_zVelo*frameRate;
+	}
+	
+	public void detectBoardCollision(){
+		if(Math.abs(m_ballPosX) <= 3.5f && m_ballPosY<=6.5f && m_ballPosY>=3.5f){
+			//check collision with board
+			if(m_ballPosZ+0.5f >= 25.0f){
+				m_zVelo = -m_zVelo;
+				m_ballPosZ = 25.0f-0.5f;
+			}				
+		}			
+	}
+	
+	public void detectFloorCollision(){
+		if(m_ballPosY-0.5f<=0.0f){
+			m_ballPosY = 0.0f;
+			m_yVelo = -m_yVelo;
+		}
+	}
+	
 	
 }
 

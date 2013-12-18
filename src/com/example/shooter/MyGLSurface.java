@@ -1,7 +1,11 @@
 package com.example.shooter;
 
+import java.util.Timer;
+
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -141,5 +145,14 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 		//set initial time
 		//have timer task move the ball	
 		//have timer check game over 
-	}		
+	}	
+	
+	class CustomPlayHandler extends Handler{
+		
+		@Override
+		public void handleMessage(Message msg){
+			super.handleMessage(msg);
+			
+		}
+	}
 }
