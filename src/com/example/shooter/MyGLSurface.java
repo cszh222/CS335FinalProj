@@ -250,7 +250,7 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	        public void handleMessage(Message msg) {
 	            super.handleMessage(msg);
 	            //System.out.println("ABDEBUG: timerHandler - entering");
-	            if(counter >= 100) {
+	            if(counter >= 50) {
 	            	cancelTimer();
 	            	m_glRenderer.setGameMode(false);
 	            	displayEndGame(true);
