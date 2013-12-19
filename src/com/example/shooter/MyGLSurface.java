@@ -274,7 +274,7 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	   };
 	   
 	   public void displayEndGame(boolean winGame) {
-		   playSound();
+		   //playSound();
 		   replaying = false;
 		   if(winGame)
 			   Toast.makeText(m_ctx, "You Win", Toast.LENGTH_SHORT).show();

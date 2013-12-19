@@ -338,8 +338,8 @@ public class MyGLSurfaceRender implements Renderer {
 	}
 	
 	public void detectFloorCollision(){
-		if(m_ballPosY-0.5f<=-3.0f && m_yVelo <= 0){
-			m_ballPosY = -3.0f;
+		if(m_ballPosY-0.5f<=-2.0f && m_yVelo <= 0){
+			m_ballPosY = -2.0f+0.5f;
 			m_yVelo = -m_yVelo;
 			floorCollide = true;
 		}
