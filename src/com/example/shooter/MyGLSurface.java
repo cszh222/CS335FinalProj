@@ -335,29 +335,9 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	
 public void playSound() {
 		MediaPlayer player;
-      //  AssetManager am;
-//try {
-   //am = m_ctx.getAssets();
-   //AssetFileDescriptor afd = am.openFd("android.resource://"+m_ctx.getPackageName()+"/"+R.raw.buzzer);
-   player = MediaPlayer.create(m_ctx, R.raw.buzzer);
-  // player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(),
-    //       afd.getLength());
-  // player.prepare();
-   player.start();
-   /*player.setOnCompletionListener(new OnCompletionListener() {
-
-       @Override
-       public void onCompletion(MediaPlayer mp) {
-           // TODO Auto-generated method stub
-           mp.release();
-       }
-
-   });
-   player.setLooping(false);
-           } catch (IOException e) {
-   // TODO Auto-generated catch block
-   e.printStackTrace();
-} */
+		int resID=getResources().getIdentifier("buzzer", "raw", m_ctx.getPackageName());
+		player = MediaPlayer.create(m_ctx, resID);
+		player.start();
 	}
 
 }
