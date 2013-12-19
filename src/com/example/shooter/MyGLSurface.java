@@ -274,12 +274,15 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	   };
 	   
 	   public void displayEndGame(boolean winGame) {
-		   playSound();
 		   replaying = false;
-		   if(winGame)
-			   Toast.makeText(m_ctx, "You Win", Toast.LENGTH_SHORT).show();
-		   else
+		   if(winGame) {
+			   playSound(true);
+			   Toast.makeText(m_ctx, "You Win", Toast.LENGTH_SHORT).show(); 
+		   }		   
+		   else {
+			   playSound(false);
 			   Toast.makeText(m_ctx, "You Lose", Toast.LENGTH_SHORT).show();
+		   }
 	   }
 
 	public void resetGame() {
@@ -333,9 +336,16 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 		startReplayTimer();
 	}
 	
-public void playSound() {
+public void playSound(boolean isWin) {
 		MediaPlayer player;
-		int resID=getResources().getIdentifier("buzzer", "raw", m_ctx.getPackageName());
+		int resID;
+		if(isWin) {
+			resID=getResources().getIdentifier("clap", "raw", m_ctx.getPackageName());
+		}
+		else {
+			resID=getResources().getIdentifier("buzzer", "raw", m_ctx.getPackageName());
+		}
+		
 		player = MediaPlayer.create(m_ctx, resID);
 		player.start();
 	}
