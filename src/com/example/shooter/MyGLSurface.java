@@ -4,6 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.os.Message;
@@ -31,10 +32,16 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	
 	private ScaleGestureDetector sgd;
 	private boolean isScaling;
+	private boolean replaying = false;
+	
+	private MediaPlayer buzzer;
 	
 	public MyGLSurface(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		m_ctx = context;
+		int resid = getResources().getIdentifier("buzzer.wave", "raw", m_ctx.getPackageName());
+		buzzer = MediaPlayer.create(m_ctx, resid);
+		
 		sgd = new ScaleGestureDetector(context, this);
 		// Create and OpenGL ES 2.0 context
 		setEGLContextClientVersion(2);
@@ -265,6 +272,8 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	   };
 	   
 	   public void displayEndGame(boolean winGame) {
+		   buzzard.start();
+		   replaying = false;
 		   if(winGame)
 			   Toast.makeText(m_ctx, "You Win", Toast.LENGTH_SHORT).show();
 		   else
@@ -282,11 +291,12 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 		if(m_glRenderer.isGameMode())
 			return;
 		m_glRenderer.loadReplayParams();
+		replaying = true;
 		startReplayTimer();		
 	}
 	
 	public void changeReplaySpeed(boolean isUp) {
-		if(m_glRenderer.isGameMode())
+		if(m_glRenderer.isGameMode() || !replaying)
 			return;
 		if(isUp) {
 			switch(replay_rate) {

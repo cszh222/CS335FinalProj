@@ -249,17 +249,17 @@ public class MyGLSurfaceRender implements Renderer {
 
 	public void setEyeAngleX(float angle) {
 		m_eyeAngleX+=angle;
-		if(m_eyeAngleX>=(float)(Math.PI/2))
-			m_eyeAngleX = (float) (Math.PI/2);
-		if(m_eyeAngleX<=(float)-(Math.PI/2))
-			m_eyeAngleX=(float)-(Math.PI/2);		
+		if(m_eyeAngleX>=(float)(Math.PI/3))
+			m_eyeAngleX = (float) (Math.PI/3);
+		if(m_eyeAngleX<=(float)-(Math.PI/3))
+			m_eyeAngleX=(float)-(Math.PI/3);		
 		m_eyeX = (float) (Math.tan(m_eyeAngleX)*m_Zoom);		
 	}	
 	
 	public void setEyeAngleY(float angle) {
 		m_eyeAngleY+=angle;
-		if(m_eyeAngleY>=(float)(Math.PI/2))
-			m_eyeAngleY = (float)(Math.PI/2);
+		if(m_eyeAngleY>=(float)(Math.PI/3))
+			m_eyeAngleY = (float)(Math.PI/3);
 		if(m_eyeAngleY<=0.0f)
 			m_eyeAngleY =0.0f;
 		
