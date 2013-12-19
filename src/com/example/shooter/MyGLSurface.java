@@ -251,6 +251,7 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	            super.handleMessage(msg);
 	            //System.out.println("ABDEBUG: timerHandler - entering");
 	            if(counter >= 100) {
+	            	counter = 0;
 	            	cancelTimer();
 	            	m_glRenderer.setGameMode(false);
 	            	displayEndGame(true);
@@ -270,7 +271,9 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	   }
 
 	public void resetGame() {
-		m_glRenderer.resetGame();		
+		cancelTimer();
+		m_glRenderer.resetGame();	
+		requestRender();
 	}
 
 
@@ -282,6 +285,8 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	}
 	
 	public void changeReplaySpeed(boolean isUp) {
+		if(m_glRenderer.isGameMode())
+			return;
 		if(isUp) {
 			switch(replay_rate) {
 				case 30:

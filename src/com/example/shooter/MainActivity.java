@@ -24,6 +24,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 	Button m_reset;
 	Button m_replay;
 	
+	Button m_speedUp;
+	Button m_speedDown;
+	
 	private SensorManager m_sensorManager;
 	private Sensor m_accelerometer;
 	
@@ -50,6 +53,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 		m_lookDown = (Button)findViewById(R.id.lookDown);
 		m_reset = (Button)findViewById(R.id.resetBut);
 		m_replay = (Button)findViewById(R.id.replayBut);
+		m_speedUp = (Button)findViewById(R.id.increaseSpeed);
+		m_speedDown = (Button)findViewById(R.id.lowerSpeed);
 		
 		m_lookLeft.setOnClickListener(look);
 		m_lookRight.setOnClickListener(look);
@@ -57,6 +62,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 		m_lookDown.setOnClickListener(look);
 		m_reset.setOnClickListener(reset);
 		m_replay.setOnClickListener(replay);
+		m_speedUp.setOnClickListener(speed);
+		m_speedDown.setOnClickListener(speed);		
+		
 		
 		m_sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		m_accelerometer = m_sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -83,6 +91,16 @@ public class MainActivity extends Activity implements SensorEventListener {
 		super.onPause();
 		m_sensorManager.unregisterListener(this);
 	}
+	
+	View.OnClickListener speed = new View.OnClickListener() {		
+		@Override
+		public void onClick(View v) {
+			if(v.getId() == m_speedUp.getId())
+				m_glSurface.changeReplaySpeed(true);
+			else
+				m_glSurface.changeReplaySpeed(false);
+		}
+	};
 	
 	View.OnClickListener reset = new View.OnClickListener() {		
 		@Override

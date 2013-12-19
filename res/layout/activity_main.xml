@@ -92,7 +92,22 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Replay" />       
+        android:text="Replay" /> 
+        
+        <Button
+        android:id="@+id/lowerSpeed"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="-" /> 
+        
+        <Button
+        android:id="@+id/increaseSpeed"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+" /> 
+        
    </LinearLayout> 
         
         

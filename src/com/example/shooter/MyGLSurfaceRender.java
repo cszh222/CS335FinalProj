@@ -58,7 +58,7 @@ public class MyGLSurfaceRender implements Renderer {
 	private boolean rimPassed;
 	private boolean floorCollide;
 	
-	public static final float GRAVITY = -0.08f;
+	public static final float GRAVITY = -0.12f;
 	
 	@Override
 	public void onDrawFrame(GL10 arg0) {
@@ -66,7 +66,7 @@ public class MyGLSurfaceRender implements Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
                 
         // Set the camera position (View matrix)
-        Matrix.setLookAtM(m_VMat, 0, m_eyeX, m_eyeY, m_Zoom, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);       
+        Matrix.setLookAtM(m_VMat, 0, m_eyeX, m_eyeY+1, m_Zoom, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);       
         
         //temp = Proj*View
         float[] temp = new float[16];
@@ -210,12 +210,13 @@ public class MyGLSurfaceRender implements Renderer {
 		m_floor = new Cube(1.0f, 1.0f, 0.0f);
 		m_backDrop = new Cube(0.82f, 0.82f, 0.82f);
 		
-		m_Zoom = -1.0f;
+		m_Zoom = -2.0f;
 		m_eyeAngleX = 0.0f;
 		m_eyeAngleY = (float) Math.toRadians(20.0);
 		m_shootAngleX = 0.0f;
 		m_shootAngleY = (float) Math.toRadians(45.0);
 		m_camPos = 0.0f;
+		m_camPosZ = 0.0f;
 		m_ballPosX = 0.0f;
 		m_ballPosY = 0.0f;
 		m_ballPosZ = 1.0f;
@@ -248,16 +249,16 @@ public class MyGLSurfaceRender implements Renderer {
 
 	public void setEyeAngleX(float angle) {
 		m_eyeAngleX+=angle;
-		if(m_eyeAngleX>=(float)Math.PI)
-			m_eyeAngleX = (float) (Math.PI);
-		if(m_eyeAngleX<=(float)-Math.PI)
-			m_eyeAngleX=(float)-Math.PI;		
+		if(m_eyeAngleX>=(float)(Math.PI/2))
+			m_eyeAngleX = (float) (Math.PI/2);
+		if(m_eyeAngleX<=(float)-(Math.PI/2))
+			m_eyeAngleX=(float)-(Math.PI/2);		
 		m_eyeX = (float) (Math.tan(m_eyeAngleX)*m_Zoom);		
 	}	
 	
 	public void setEyeAngleY(float angle) {
 		m_eyeAngleY+=angle;
-		if(m_eyeAngleY>=(float)Math.PI/2)
+		if(m_eyeAngleY>=(float)(Math.PI/2))
 			m_eyeAngleY = (float)(Math.PI/2);
 		if(m_eyeAngleY<=0.0f)
 			m_eyeAngleY =0.0f;
@@ -422,12 +423,13 @@ public class MyGLSurfaceRender implements Renderer {
 	}
 	
 	public void resetGame(){		
-		m_Zoom = -1.0f;
+		m_Zoom = -2.0f;
 		m_eyeAngleX = 0.0f;
 		m_eyeAngleY = (float) Math.toRadians(20.0);
 		m_shootAngleX = 0.0f;
 		m_shootAngleY = (float) Math.toRadians(45.0);
 		m_camPos = 0.0f;
+		m_camPosZ = 0.0f;
 		m_ballPosX = 0.0f;
 		m_ballPosY = 0.0f;
 		m_ballPosZ = 1.0f;
