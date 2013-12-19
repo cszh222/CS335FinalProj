@@ -293,11 +293,11 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 				case 30:
 					replay_rate = 30;
 					break;
-				case 7:
+				case 120:
 					replay_rate = 30;
 					break;
-				case 3:
-					replay_rate = 7;
+				case 300:
+					replay_rate = 120;
 					break;
 				default:
 					Log.e("replaySwitch", "SHOULD NEVER HIT THIS!!!");
@@ -305,18 +305,18 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 		}
 		else {
 			switch(replay_rate) {
-			case 30:
-				replay_rate = 7;
-				break;
-			case 7:
-				replay_rate = 3;
-				break;
-			case 3:
-				replay_rate = 3;
-				break;
-			default:
-				Log.e("replaySwitch", "SHOULD NEVER HIT THIS!!!");
-		}
+				case 30:
+					replay_rate = 120;
+					break;
+				case 120:
+					replay_rate = 300;
+					break;
+				case 300:
+					replay_rate = 300;
+					break;
+				default:
+					Log.e("replaySwitch", "SHOULD NEVER HIT THIS!!!");
+			}
 		}
 		startReplayTimer();
 	}
