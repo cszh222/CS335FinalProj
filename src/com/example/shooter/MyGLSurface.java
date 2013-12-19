@@ -1,10 +1,14 @@
 package com.example.shooter;
 
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.os.Message;
@@ -34,13 +38,11 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	private boolean isScaling;
 	private boolean replaying = false;
 	
-	private MediaPlayer buzzer;
-	
 	public MyGLSurface(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		m_ctx = context;
-		int resid = getResources().getIdentifier("buzzer.wave", "raw", m_ctx.getPackageName());
-		buzzer = MediaPlayer.create(m_ctx, resid);
+		/*int resid = getResources().getIdentifier("buzzer.wave", "raw", m_ctx.getPackageName());
+		buzzer = MediaPlayer.create(m_ctx, resid);*/
 		
 		sgd = new ScaleGestureDetector(context, this);
 		// Create and OpenGL ES 2.0 context
@@ -272,7 +274,7 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 	   };
 	   
 	   public void displayEndGame(boolean winGame) {
-		   buzzard.start();
+		   playSound();
 		   replaying = false;
 		   if(winGame)
 			   Toast.makeText(m_ctx, "You Win", Toast.LENGTH_SHORT).show();
@@ -329,6 +331,33 @@ public class MyGLSurface extends GLSurfaceView implements OnScaleGestureListener
 			}
 		}
 		startReplayTimer();
+	}
+	
+public void playSound() {
+		MediaPlayer player;
+      //  AssetManager am;
+//try {
+   //am = m_ctx.getAssets();
+   //AssetFileDescriptor afd = am.openFd("android.resource://"+m_ctx.getPackageName()+"/"+R.raw.buzzer);
+   player = MediaPlayer.create(m_ctx, R.raw.buzzer);
+  // player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(),
+    //       afd.getLength());
+  // player.prepare();
+   player.start();
+   /*player.setOnCompletionListener(new OnCompletionListener() {
+
+       @Override
+       public void onCompletion(MediaPlayer mp) {
+           // TODO Auto-generated method stub
+           mp.release();
+       }
+
+   });
+   player.setLooping(false);
+           } catch (IOException e) {
+   // TODO Auto-generated catch block
+   e.printStackTrace();
+} */
 	}
 
 }
